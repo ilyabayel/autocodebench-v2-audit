@@ -263,6 +263,13 @@ nav#TOC { border-block: 1px solid; padding-block: .7rem; }
 .task-grid .flag { background: #a33f28; color: white; font-weight: 750; }
 @media (max-width: 38rem) { .bars li { grid-template-columns: 1fr auto; margin: .65rem 0; } .track { grid-row: 2; grid-column: 1 / -1; } .bars strong { grid-row: 1; grid-column: 2; } }
 </style>
+<style>
+#language-summary button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; padding: .25rem 0; }
+#language-summary button:hover { text-decoration: underline; }
+#language-summary button span::after { content: '↕'; margin-left: .35em; }
+#language-summary th[aria-sort="ascending"] button span::after { content: '↑'; }
+#language-summary th[aria-sort="descending"] button span::after { content: '↓'; }
+</style>
 </head>
 <body>
 <header id="title-block-header">
@@ -468,13 +475,15 @@ href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/9badc8ae5d9c4e40
 8 chart</a> · <a
 href="https://autocodebench.github.io/images/leaderboard_acb-v2-260217.png">February
 chart</a></p>
-<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table id="language-summary">
 <thead>
 <tr>
 <th>Language</th>
 <th style="text-align: right;">December tasks</th>
 <th style="text-align: right;">February tasks</th>
-<th style="text-align: right;">February easy / medium / hard</th>
+<th style="text-align: right;">February easy</th>
+<th style="text-align: right;">February medium</th>
+<th style="text-align: right;">February hard</th>
 <th style="text-align: right;">Median prompt words</th>
 <th style="text-align: right;">Median reference lines</th>
 </tr>
@@ -484,7 +493,9 @@ chart</a></p>
 <td>C++</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">48</td>
-<td style="text-align: right;">1 / 9 / 38</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">38</td>
 <td style="text-align: right;">631.5</td>
 <td style="text-align: right;">155</td>
 </tr>
@@ -492,7 +503,9 @@ chart</a></p>
 <td>C#</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">16 / 11 / 23</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">23</td>
 <td style="text-align: right;">545.5</td>
 <td style="text-align: right;">118</td>
 </tr>
@@ -500,7 +513,9 @@ chart</a></p>
 <td>Dart</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">5 / 6 / 39</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">39</td>
 <td style="text-align: right;">475.5</td>
 <td style="text-align: right;">83.5</td>
 </tr>
@@ -508,7 +523,9 @@ chart</a></p>
 <td><strong>Elixir</strong></td>
 <td style="text-align: right;"><strong>50</strong></td>
 <td style="text-align: right;"><strong>50</strong></td>
-<td style="text-align: right;"><strong>2 / 18 / 30</strong></td>
+<td style="text-align: right;"><strong>2</strong></td>
+<td style="text-align: right;"><strong>18</strong></td>
+<td style="text-align: right;"><strong>30</strong></td>
 <td style="text-align: right;"><strong>275</strong></td>
 <td style="text-align: right;"><strong>46</strong></td>
 </tr>
@@ -516,7 +533,9 @@ chart</a></p>
 <td>Go</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">9 / 6 / 35</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">35</td>
 <td style="text-align: right;">306.5</td>
 <td style="text-align: right;">76.5</td>
 </tr>
@@ -524,7 +543,9 @@ chart</a></p>
 <td>Java</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">8 / 16 / 26</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">26</td>
 <td style="text-align: right;">608</td>
 <td style="text-align: right;">97</td>
 </tr>
@@ -532,7 +553,9 @@ chart</a></p>
 <td>JavaScript</td>
 <td style="text-align: right;">47</td>
 <td style="text-align: right;">47</td>
-<td style="text-align: right;">6 / 8 / 33</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">33</td>
 <td style="text-align: right;">340</td>
 <td style="text-align: right;">66</td>
 </tr>
@@ -540,7 +563,9 @@ chart</a></p>
 <td>Julia</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">5 / 11 / 34</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">34</td>
 <td style="text-align: right;">289</td>
 <td style="text-align: right;">43</td>
 </tr>
@@ -548,7 +573,9 @@ chart</a></p>
 <td>Kotlin</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">12 / 13 / 25</td>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">25</td>
 <td style="text-align: right;">459.5</td>
 <td style="text-align: right;">81</td>
 </tr>
@@ -556,7 +583,9 @@ chart</a></p>
 <td>Perl</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">14 / 13 / 23</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">23</td>
 <td style="text-align: right;">302.5</td>
 <td style="text-align: right;">36.5</td>
 </tr>
@@ -564,7 +593,9 @@ chart</a></p>
 <td>PHP</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">11 / 18 / 21</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">21</td>
 <td style="text-align: right;">284</td>
 <td style="text-align: right;">69.5</td>
 </tr>
@@ -572,7 +603,9 @@ chart</a></p>
 <td>Python</td>
 <td style="text-align: right;">53</td>
 <td style="text-align: right;">53</td>
-<td style="text-align: right;">7 / 4 / 42</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">42</td>
 <td style="text-align: right;">388</td>
 <td style="text-align: right;">59</td>
 </tr>
@@ -580,7 +613,9 @@ chart</a></p>
 <td>R</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">4 / 10 / 36</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">36</td>
 <td style="text-align: right;">325</td>
 <td style="text-align: right;">59.5</td>
 </tr>
@@ -588,7 +623,9 @@ chart</a></p>
 <td>Racket</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">1 / 23 / 26</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">23</td>
+<td style="text-align: right;">26</td>
 <td style="text-align: right;">316.5</td>
 <td style="text-align: right;">40.5</td>
 </tr>
@@ -596,7 +633,9 @@ chart</a></p>
 <td>Ruby</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">7 / 13 / 30</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">30</td>
 <td style="text-align: right;">355</td>
 <td style="text-align: right;">54</td>
 </tr>
@@ -604,7 +643,9 @@ chart</a></p>
 <td>Rust</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">0 / 7 / 43</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">43</td>
 <td style="text-align: right;">502</td>
 <td style="text-align: right;">147</td>
 </tr>
@@ -612,7 +653,9 @@ chart</a></p>
 <td>Scala</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">4 / 6 / 40</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">40</td>
 <td style="text-align: right;">488</td>
 <td style="text-align: right;">73</td>
 </tr>
@@ -620,7 +663,9 @@ chart</a></p>
 <td>Shell</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">9 / 10 / 31</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">31</td>
 <td style="text-align: right;">328.5</td>
 <td style="text-align: right;">42</td>
 </tr>
@@ -628,7 +673,9 @@ chart</a></p>
 <td>Swift</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">7 / 11 / 32</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">32</td>
 <td style="text-align: right;">308.5</td>
 <td style="text-align: right;">54</td>
 </tr>
@@ -636,10 +683,13 @@ chart</a></p>
 <td>TypeScript</td>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">8 / 4 / 38</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">38</td>
 <td style="text-align: right;">307</td>
 <td style="text-align: right;">56.5</td>
 </tr>
+</tbody><tfoot>
 <tr>
 <td><strong>Total</strong></td>
 <td style="text-align: right;"><strong>1,000</strong></td>
@@ -647,8 +697,10 @@ chart</a></p>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
 <td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
 </tr>
-</tbody>
+</tfoot>
 </table></div>
 <p>For <strong>each</strong> language and <strong>each</strong> model,
 V2 Pass@1 is <strong>unpublished</strong> in the audited leaderboard.
@@ -1836,5 +1888,36 @@ evaluation client</a></p>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">rtk</span> proxy python3.12 autocodebench-v2-audit/grading_probe.py <span class="dt">\</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  autocodebench-v2-260217.jsonl /path/to/AutoCodeBench-V2/call_sandbox.py <span class="dt">\</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--all-elixir</span> <span class="at">--original</span> /path/to/autocodebench-v2.jsonl</span></code></pre></div>
+<script>
+(() => {
+  const table = document.getElementById('language-summary');
+  const headers = [...table.tHead.rows[0].cells];
+  const body = table.tBodies[0];
+  const collator = new Intl.Collator('en');
+
+  headers.forEach((header, column) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = header.textContent.trim();
+    const arrow = document.createElement('span');
+    arrow.setAttribute('aria-hidden', 'true');
+    button.append(arrow);
+    header.scope = 'col';
+    header.replaceChildren(button);
+
+    button.addEventListener('click', () => {
+      const direction = header.getAttribute('aria-sort') === 'ascending' ? -1 : 1;
+      for (const other of headers) other.removeAttribute('aria-sort');
+      header.setAttribute('aria-sort', direction === 1 ? 'ascending' : 'descending');
+
+      const value = row => row.cells[column].textContent.trim();
+      const sorted = [...body.rows].sort((a, b) => direction * (column === 0
+        ? collator.compare(value(a), value(b))
+        : Number(value(a)) - Number(value(b))));
+      body.append(...sorted);
+    });
+  });
+})();
+</script>
 </body>
 </html>
