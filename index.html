@@ -246,6 +246,23 @@ a { text-underline-offset: .16em; }
 th, td { padding: .55rem .7rem; vertical-align: top; }
 nav#TOC { border-block: 1px solid; padding-block: .7rem; }
 </style>
+<style>
+.infographic { margin: 1.5rem 0 2rem; padding: clamp(.85rem, 3vw, 1.65rem); border: 1px solid color-mix(in srgb, currentColor 22%, transparent); border-radius: 14px; }
+.infographic h3 { margin: 0 0 .85rem; }
+.infographic figcaption { margin-top: .9rem; font-size: .9rem; }
+.fig-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr)); gap: 1rem; margin: 0; }
+.fig-stats div { display: flex; flex-direction: column-reverse; }
+.fig-stats dd { margin: 0; font-size: 2rem; font-weight: 750; }
+.bars { padding: 0; margin: 0; list-style: none; font-size: .9rem; }
+.bars li { display: grid; grid-template-columns: minmax(9rem, 2fr) 3fr auto; align-items: center; gap: .35rem .8rem; margin: .45rem 0; }
+.bars strong { min-width: 3.2rem; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.track { display: block; height: .75rem; overflow: hidden; border-radius: 1rem; background: color-mix(in srgb, currentColor 12%, transparent); }
+.track::before { content: ''; width: var(--fill); display: block; height: 100%; border-radius: inherit; background: #268782; }
+.task-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: .35rem; max-width: 22rem; }
+.task-grid span { display: grid; place-items: center; aspect-ratio: 1; border-radius: .25rem; background: color-mix(in srgb, currentColor 10%, transparent); }
+.task-grid .flag { background: #a33f28; color: white; font-weight: 750; }
+@media (max-width: 38rem) { .bars li { grid-template-columns: 1fr auto; margin: .65rem 0; } .track { grid-row: 2; grid-column: 1 / -1; } .bars strong { grid-row: 1; grid-column: 2; } }
+</style>
 </head>
 <body>
 <header id="title-block-header">
@@ -291,6 +308,9 @@ AutoCodeBench-V2 show an Elixir advantage?</h1>
 <p>Independent audit of the February 17, 2026 release, completed
 November 21, 2026.</p>
 <h2 id="1-executive-verdict">1. Executive verdict</h2>
+<figure class="infographic"><h3>What the public V2 release tells us</h3>
+<dl class="fig-stats"><div><dt>February tasks</dt><dd>998</dd></div><div><dt>Overall model scores</dt><dd>9</dd></div><div><dt>Published language scores</dt><dd>0</dd></div></dl>
+<figcaption>The overall scores cannot tell us which language ranked first.</figcaption></figure>
 <p><strong>AutoCodeBench-V2 does not establish that Elixir is the best
 language for LLM coding. Its public leaderboard does not establish that
 Elixir ranks first in V2, either.</strong> The nine published bars are
@@ -323,6 +343,18 @@ languages, estimate how much scoring defects changed any model's V2
 result, or identify the best language for repository work.</p>
 <h2 id="2-reported-scores-sample-sizes-and-uncertainty">2. Reported
 scores, sample sizes, and uncertainty</h2>
+<figure class="infographic"><h3>February V2 overall model scores</h3>
+<ul class="bars"><li><span>Claude Opus 4.5 thinking</span><span class="track" aria-hidden="true" style="--fill:91.30%"></span><strong>91.3%</strong></li>
+<li><span>Gemini 3 pro</span><span class="track" aria-hidden="true" style="--fill:87.10%"></span><strong>87.1%</strong></li>
+<li><span>GPT 5 high</span><span class="track" aria-hidden="true" style="--fill:84.30%"></span><strong>84.3%</strong></li>
+<li><span>GLM4.7 thinking</span><span class="track" aria-hidden="true" style="--fill:84.00%"></span><strong>84%</strong></li>
+<li><span>Deepseek-v3.2-Speciale thinking</span><span class="track" aria-hidden="true" style="--fill:82.40%"></span><strong>82.4%</strong></li>
+<li><span>Hunyuan2.0-thinking-251109</span><span class="track" aria-hidden="true" style="--fill:82.40%"></span><strong>82.4%</strong></li>
+<li><span>Kimi K2 thinking</span><span class="track" aria-hidden="true" style="--fill:81.00%"></span><strong>81%</strong></li>
+<li><span>DeepSeek-V3.2 thinking</span><span class="track" aria-hidden="true" style="--fill:73.80%"></span><strong>73.8%</strong></li>
+<li><span>Seed-1.6-251015 thinking</span><span class="track" aria-hidden="true" style="--fill:72.20%"></span><strong>72.2%</strong></li>
+</ul>
+<figcaption>Reported benchmark-wide averages. Scale: 0–100%.</figcaption></figure>
 <p>The current leaderboard page embeds a V2 aggregate PNG followed by
 the older Full and Lite images. The public V2 README, Hugging Face tree,
 and official site did not supply V2 model responses, individual grades,
@@ -646,6 +678,17 @@ for every model. <a href="https://openreview.net/pdf?id=fN0MED2Idq">ICLR
 paper, Table 4</a></p>
 <h2 id="3-evidence-of-unequal-task-difficulty">3. Evidence of unequal
 task difficulty</h2>
+<figure class="infographic"><h3>Median prompt length by language</h3>
+<ul class="bars"><li><span>Elixir</span><span class="track" aria-hidden="true" style="--fill:39.29%"></span><strong>275 words</strong></li>
+<li><span>Go</span><span class="track" aria-hidden="true" style="--fill:43.79%"></span><strong>306.5 words</strong></li>
+<li><span>TypeScript</span><span class="track" aria-hidden="true" style="--fill:43.86%"></span><strong>307 words</strong></li>
+<li><span>JavaScript</span><span class="track" aria-hidden="true" style="--fill:48.57%"></span><strong>340 words</strong></li>
+<li><span>Python</span><span class="track" aria-hidden="true" style="--fill:55.43%"></span><strong>388 words</strong></li>
+<li><span>Rust</span><span class="track" aria-hidden="true" style="--fill:71.71%"></span><strong>502 words</strong></li>
+<li><span>Java</span><span class="track" aria-hidden="true" style="--fill:86.86%"></span><strong>608 words</strong></li>
+<li><span>C++</span><span class="track" aria-hidden="true" style="--fill:90.21%"></span><strong>631.5 words</strong></li>
+</ul>
+<figcaption>Scale: 0–700 words. Prompt length measures reading load and can reflect formatting, explanation, or extra requirements.</figcaption></figure>
 <h3 id="full-file-measurements-and-a-topic-sample">Full-file
 measurements and a topic sample</h3>
 <ul>
@@ -1066,6 +1109,15 @@ href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/tree/6f8dedb">Te
 release list</a></p>
 <h2 id="5-evaluation-and-sandbox-audit">5. Evaluation and sandbox
 audit</h2>
+<figure class="infographic"><h3>Wrong answers passed on 9 of 50 Elixir tasks</h3>
+<div class="task-grid" aria-hidden="true">
+<span class="flag">×</span><span class="flag">×</span><span class="flag">×</span><span class="flag">×</span><span class="flag">×</span><span class="flag">×</span><span class="flag">×</span><span class="flag">×</span><span class="flag">×</span><span>·</span>
+<span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span>
+<span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span>
+<span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span>
+<span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span><span>·</span>
+</div>
+<figcaption>Each square represents one task. The nine marked tasks accepted a deliberately wrong answer because their suites reported mismatches without failing. The impact on official model scores is unknown.</figcaption></figure>
 <p><strong>Known-wrong answers passed grading on nine of 50 Elixir
 tasks.</strong> Each affected test function prints comparisons but lets
 the process succeed after a mismatch. I kept the test suites intact,
@@ -1456,6 +1508,14 @@ extracted source and execution trace.</li>
 </ul>
 <h2 id="8-independent-benchmark-comparison">8. Independent benchmark
 comparison</h2>
+<figure class="infographic"><h3>Elixir acceptance was lower on the same 100 LeetCode tasks</h3>
+<ul class="bars"><li><span>Claude Sonnet 4.5</span><span class="track" aria-hidden="true" style="--fill:30.00%"></span><strong>15 pp</strong></li>
+<li><span>Gemini 2.5 Flash</span><span class="track" aria-hidden="true" style="--fill:86.00%"></span><strong>43 pp</strong></li>
+<li><span>Gemini 3 Flash Preview</span><span class="track" aria-hidden="true" style="--fill:2.00%"></span><strong>1 pp</strong></li>
+<li><span>GPT-5 mini</span><span class="track" aria-hidden="true" style="--fill:60.00%"></span><strong>30 pp</strong></li>
+<li><span>Grok Code Fast 1</span><span class="track" aria-hidden="true" style="--fill:86.00%"></span><strong>43 pp</strong></li>
+</ul>
+<figcaption>Elixir’s deficit against Python in the independent study below. Scale: 0–50 percentage points.</figcaption></figure>
 <p><strong>Equivalent algorithmic tasks.</strong> Alex Svetkin reports
 testing five model configurations on the same 100 LeetCode problems
 published between October 2025 and February 2026 (15 easy, 59 medium, 26
