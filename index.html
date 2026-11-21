@@ -256,12 +256,13 @@ nav#TOC { border-block: 1px solid; padding-block: .7rem; }
 .bars { padding: 0; margin: 0; list-style: none; font-size: .9rem; }
 .bars li { display: grid; grid-template-columns: minmax(9rem, 2fr) 3fr auto; align-items: center; gap: .35rem .8rem; margin: .45rem 0; }
 .bars strong { min-width: 3.2rem; text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.track { display: block; height: .75rem; overflow: hidden; border-radius: 1rem; background: color-mix(in srgb, currentColor 12%, transparent); }
+.track, .difficulty-stack { overflow: hidden; border-radius: 1rem; }
+.track { display: block; height: .75rem; background: color-mix(in srgb, currentColor 12%, transparent); }
 .track::before { content: ''; width: var(--fill); display: block; height: 100%; border-radius: inherit; background: #268782; }
 .task-grid { display: grid; grid-template-columns: repeat(10, 1fr); gap: .35rem; max-width: 22rem; }
 .task-grid span { display: grid; place-items: center; aspect-ratio: 1; border-radius: .25rem; background: color-mix(in srgb, currentColor 10%, transparent); }
 .task-grid .flag { background: #a33f28; color: white; font-weight: 750; }
-@media (max-width: 38rem) { .bars li { grid-template-columns: 1fr auto; margin: .65rem 0; } .track { grid-row: 2; grid-column: 1 / -1; } .bars strong { grid-row: 1; grid-column: 2; } }
+@media (max-width: 38rem) { .bars li { grid-template-columns: 1fr auto; margin: .65rem 0; } .track, .difficulty-stack { grid-row: 2; grid-column: 1 / -1; } .bars strong { grid-row: 1; grid-column: 2; } }
 </style>
 <style>
 #language-summary button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; padding: .25rem 0; }
@@ -269,6 +270,17 @@ nav#TOC { border-block: 1px solid; padding-block: .7rem; }
 #language-summary button span::after { content: '↕'; margin-left: .35em; }
 #language-summary th[aria-sort="ascending"] button span::after { content: '↑'; }
 #language-summary th[aria-sort="descending"] button span::after { content: '↓'; }
+</style>
+<style>
+@media (min-width: 38.01rem) {
+  .difficulty-bars li { grid-template-columns: minmax(6rem, 1fr) minmax(8rem, 4fr) 7rem; }
+}
+.difficulty-stack { display: grid; height: .9rem; }
+.difficulty-legend { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; }
+.difficulty-legend li { padding: .1rem .55rem; border-radius: .4rem; color: white; }
+.difficulty-stack .easy, .difficulty-legend .easy { background: #207469; }
+.difficulty-stack .medium, .difficulty-legend .medium { background: #52639e; }
+.difficulty-stack .hard, .difficulty-legend .hard { background: #a33f28; }
 </style>
 </head>
 <body>
@@ -730,6 +742,33 @@ for every model. <a href="https://openreview.net/pdf?id=fN0MED2Idq">ICLR
 paper, Table 4</a></p>
 <h2 id="3-evidence-of-unequal-task-difficulty">3. Evidence of unequal
 task difficulty</h2>
+<figure class="infographic" id="difficulty-by-language">
+<h3>Difficulty mix across all 20 languages</h3>
+<ul class="difficulty-legend"><li class="easy">Easy</li><li class="medium">Medium</li><li class="hard">Hard</li></ul>
+<ul class="bars difficulty-bars">
+<li aria-label="Rust: 0 easy, 7 medium, 43 hard"><span>Rust</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:0fr 7fr 43fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>0 / 7 / 43</strong></li>
+<li aria-label="Scala: 4 easy, 6 medium, 40 hard"><span>Scala</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:4fr 6fr 40fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>4 / 6 / 40</strong></li>
+<li aria-label="Python: 7 easy, 4 medium, 42 hard"><span>Python</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:7fr 4fr 42fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>7 / 4 / 42</strong></li>
+<li aria-label="C++: 1 easy, 9 medium, 38 hard"><span>C++</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:1fr 9fr 38fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>1 / 9 / 38</strong></li>
+<li aria-label="Dart: 5 easy, 6 medium, 39 hard"><span>Dart</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:5fr 6fr 39fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>5 / 6 / 39</strong></li>
+<li aria-label="TypeScript: 8 easy, 4 medium, 38 hard"><span>TypeScript</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:8fr 4fr 38fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>8 / 4 / 38</strong></li>
+<li aria-label="R: 4 easy, 10 medium, 36 hard"><span>R</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:4fr 10fr 36fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>4 / 10 / 36</strong></li>
+<li aria-label="JavaScript: 6 easy, 8 medium, 33 hard"><span>JavaScript</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:6fr 8fr 33fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>6 / 8 / 33</strong></li>
+<li aria-label="Go: 9 easy, 6 medium, 35 hard"><span>Go</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:9fr 6fr 35fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>9 / 6 / 35</strong></li>
+<li aria-label="Julia: 5 easy, 11 medium, 34 hard"><span>Julia</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:5fr 11fr 34fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>5 / 11 / 34</strong></li>
+<li aria-label="Swift: 7 easy, 11 medium, 32 hard"><span>Swift</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:7fr 11fr 32fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>7 / 11 / 32</strong></li>
+<li aria-label="Shell: 9 easy, 10 medium, 31 hard"><span>Shell</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:9fr 10fr 31fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>9 / 10 / 31</strong></li>
+<li aria-label="Elixir: 2 easy, 18 medium, 30 hard"><span>Elixir</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:2fr 18fr 30fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>2 / 18 / 30</strong></li>
+<li aria-label="Ruby: 7 easy, 13 medium, 30 hard"><span>Ruby</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:7fr 13fr 30fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>7 / 13 / 30</strong></li>
+<li aria-label="Java: 8 easy, 16 medium, 26 hard"><span>Java</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:8fr 16fr 26fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>8 / 16 / 26</strong></li>
+<li aria-label="Racket: 1 easy, 23 medium, 26 hard"><span>Racket</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:1fr 23fr 26fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>1 / 23 / 26</strong></li>
+<li aria-label="Kotlin: 12 easy, 13 medium, 25 hard"><span>Kotlin</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:12fr 13fr 25fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>12 / 13 / 25</strong></li>
+<li aria-label="C#: 16 easy, 11 medium, 23 hard"><span>C#</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:16fr 11fr 23fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>16 / 11 / 23</strong></li>
+<li aria-label="Perl: 14 easy, 13 medium, 23 hard"><span>Perl</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:14fr 13fr 23fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>14 / 13 / 23</strong></li>
+<li aria-label="PHP: 11 easy, 18 medium, 21 hard"><span>PHP</span><span class="difficulty-stack" aria-hidden="true" style="grid-template-columns:11fr 18fr 21fr"><span class="easy"></span><span class="medium"></span><span class="hard"></span></span><strong>11 / 18 / 21</strong></li>
+</ul>
+<figcaption>Each bar represents 100% of that language’s February tasks. Counts are shown in Easy / Medium / Hard order. Languages are ordered by their share labeled Hard. These labels were inherited from Full and are based on the original filtering model’s results. <a href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2-260217.jsonl">February dataset</a></figcaption>
+</figure>
 <figure class="infographic"><h3>Median prompt length by language</h3>
 <ul class="bars"><li><span>Elixir</span><span class="track" aria-hidden="true" style="--fill:39.29%"></span><strong>275 words</strong></li>
 <li><span>Go</span><span class="track" aria-hidden="true" style="--fill:43.79%"></span><strong>306.5 words</strong></li>
@@ -1516,6 +1555,20 @@ threshold by a normal approximation. A 5 pp difference takes roughly
 940. Run a pilot to estimate discordance, clustering and attrition, then
 simulate power for the actual contrast and correction plan.</p>
 <h2 id="7-statistical-conclusions">7. Statistical conclusions</h2>
+<figure class="infographic" id="difficulty-and-success">
+<h3>Difficulty and passing the sandbox</h3>
+<p>The V2 leaderboard publishes overall model averages. It supplies no model outcomes by task or difficulty, so a model Pass@1 curve by difficulty cannot be recovered. For example, if Claude’s 91.3% overall were a task-weighted 911/998, the 87 failures could all come from Easy or all from Hard. The same overall score would then imply opposite difficulty trends. <a href="https://autocodebench.github.io/leaderboard.html">Official leaderboard</a></p>
+<p>The chart shows an observed comparison from the audit: two supplied Elixir solutions per task, run in the pinned public sandbox.</p>
+<ul class="bars">
+<li><span>Easy · Released output</span><span class="track" aria-hidden="true" style="--fill:100.00%"></span><strong>2/2 (100%)</strong></li>
+<li><span>Easy · Original Full reference</span><span class="track" aria-hidden="true" style="--fill:50.00%"></span><strong>1/2 (50%)</strong></li>
+<li><span>Medium · Released output</span><span class="track" aria-hidden="true" style="--fill:55.56%"></span><strong>10/18 (56%)</strong></li>
+<li><span>Medium · Original Full reference</span><span class="track" aria-hidden="true" style="--fill:61.11%"></span><strong>11/18 (61%)</strong></li>
+<li><span>Hard · Released output</span><span class="track" aria-hidden="true" style="--fill:90.00%"></span><strong>27/30 (90%)</strong></li>
+<li><span>Hard · Original Full reference</span><span class="track" aria-hidden="true" style="--fill:76.67%"></span><strong>23/30 (77%)</strong></li>
+</ul>
+<figcaption>Scale: 0–100%. Released outputs passed 27/30 Hard tasks and 10/18 Medium tasks in this replay. These rates describe the supplied code and the grader, whose coverage varies by task. The Easy group contains only two tasks. <a href="elixir-fixture-results.csv" download>Download the 50 task outcomes</a>.</figcaption>
+</figure>
 <ul>
 <li><strong>The finite-corpus quantities in §§2–3 are exact for these
 files.</strong> Prompt length is a measurable property. As a descriptive
