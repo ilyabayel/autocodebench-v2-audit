@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>AutoCodeBench-V2 and Elixir</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+<style>
+html { color-scheme: light dark; }
+body { max-width: 72rem; padding: clamp(1rem, 4vw, 4rem); font: 1.05rem/1.65 system-ui, sans-serif; }
+h1, h2, h3 { line-height: 1.18; }
+h2 { margin-top: 2.5rem; }
+a { text-underline-offset: .16em; }
+.table-scroll { overflow-x: auto; margin-block: 1.5rem; }
+.table-scroll table { margin: 0; min-width: 36rem; }
+th, td { padding: .55rem .7rem; vertical-align: top; }
+nav#TOC { border-block: 1px solid; padding-block: .7rem; }
+</style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">AutoCodeBench-V2 and Elixir</h1>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#does-autocodebench-v2-show-an-elixir-advantage"
+id="toc-does-autocodebench-v2-show-an-elixir-advantage">Does
+AutoCodeBench-V2 show an Elixir advantage?</a>
+<ul>
+<li><a href="#1-executive-verdict" id="toc-1-executive-verdict">1.
+Executive verdict</a></li>
+<li><a href="#2-reported-scores-sample-sizes-and-uncertainty"
+id="toc-2-reported-scores-sample-sizes-and-uncertainty">2. Reported
+scores, sample sizes, and uncertainty</a></li>
+<li><a href="#3-evidence-of-unequal-task-difficulty"
+id="toc-3-evidence-of-unequal-task-difficulty">3. Evidence of unequal
+task difficulty</a></li>
+<li><a href="#4-benchmark-methodology-audit"
+id="toc-4-benchmark-methodology-audit">4. Benchmark methodology
+audit</a></li>
+<li><a href="#5-evaluation-and-sandbox-audit"
+id="toc-5-evaluation-and-sandbox-audit">5. Evaluation and sandbox
+audit</a></li>
+<li><a href="#6-difficulty-controlled-evaluation-protocol"
+id="toc-6-difficulty-controlled-evaluation-protocol">6.
+Difficulty-controlled evaluation protocol</a></li>
+<li><a href="#7-statistical-conclusions"
+id="toc-7-statistical-conclusions">7. Statistical conclusions</a></li>
+<li><a href="#8-independent-benchmark-comparison"
+id="toc-8-independent-benchmark-comparison">8. Independent benchmark
+comparison</a></li>
+<li><a href="#9-real-world-implications"
+id="toc-9-real-world-implications">9. Real-world implications</a></li>
+<li><a href="#10-final-verdict-table"
+id="toc-10-final-verdict-table">10. Final verdict table</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="does-autocodebench-v2-show-an-elixir-advantage">Does
+AutoCodeBench-V2 show an Elixir advantage?</h1>
+<p>Independent audit of the February 17, 2026 release, completed
+November 21, 2026.</p>
+<h2 id="1-executive-verdict">1. Executive verdict</h2>
+<p><strong>AutoCodeBench-V2 does not establish that Elixir is the best
+language for LLM coding. Its public leaderboard does not establish that
+Elixir ranks first in V2, either.</strong> The nine published bars are
+overall model averages. The widely cited Elixir scores come from the
+original 3,920-task AutoCodeBench-Full. The February V2 release uses
+separate language-specific problem sets and supplies neither language
+scores nor a model-by-task outcome matrix. <a
+href="https://autocodebench.github.io/images/leaderboard_acb-v2-260217.png">February
+V2 chart</a> · <a href="https://arxiv.org/abs/2508.09101">August 2025
+paper</a> · <a href="https://openreview.net/pdf?id=fN0MED2Idq">ICLR
+version, Table 4</a></p>
+<p>The task audit found <strong>unequal task composition and concrete
+grading defects</strong>. Several Elixir tasks have fewer essential
+steps than nearby examples in Python, Rust, Java, or C++. Other Elixir
+tasks are comparably demanding or harder, and some similarly labeled
+tasks in other languages are straightforward. The findings rule out
+treating the language sets as difficulty-equivalent. They leave the net
+bias, an Elixir-specific effect size, and the performance ranking
+unidentified. Independent matched comparisons provide counterexamples to
+a general Elixir advantage. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2-260217.jsonl">Pinned
+February task and test data</a></p>
+<p>Confidence is <strong>high</strong> about what the leaderboard
+measures and about the specific task and test differences below.
+Confidence is <strong>moderate</strong> that the February Elixir set has
+a narrower reasoning burden than several focal comparison sets in some
+common task families. The audit has <strong>insufficient
+evidence</strong> to rank average intrinsic difficulty across all 20
+languages, estimate how much scoring defects changed any model's V2
+result, or identify the best language for repository work.</p>
+<h2 id="2-reported-scores-sample-sizes-and-uncertainty">2. Reported
+scores, sample sizes, and uncertainty</h2>
+<p>The current leaderboard page embeds a V2 aggregate PNG followed by
+the older Full and Lite images. The public V2 README, Hugging Face tree,
+and official site did not supply V2 model responses, individual grades,
+or a per-language score matrix. A public request for evaluation
+artifacts has no maintainer response with the artifacts. The released V2
+<code>output</code> field is supplied reference code for evaluation. The
+instructions tell evaluators to replace it with their own model output.
+<a href="https://autocodebench.github.io/leaderboard.html">Leaderboard
+page</a> · <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd60b3cb03a5961ccd41691863f4ed5e493/AutoCodeBench-V2/README.md">Repository
+and V2 instructions</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/tree/6f8dedb0000a20405c894062ed65d5e26ceb3afc">Official
+data tree</a> · <a
+href="https://github.com/autocodebench/autocodebench.github.io/tree/f2661e403256da09030781d54e2dda682cce6233">Website
+source at the audited revision</a> · <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/issues/4">Results
+artifact request</a></p>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Model, using chart labels</th>
+<th style="text-align: right;">December overall %</th>
+<th style="text-align: right;">February overall %</th>
+<th style="text-align: right;">Change, pp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Opus 4.5 thinking</td>
+<td style="text-align: right;">82.9</td>
+<td style="text-align: right;">91.3</td>
+<td style="text-align: right;">+8.4</td>
+</tr>
+<tr>
+<td>Gemini 3 pro</td>
+<td style="text-align: right;">79.3</td>
+<td style="text-align: right;">87.1</td>
+<td style="text-align: right;">+7.8</td>
+</tr>
+<tr>
+<td>GPT 5 high</td>
+<td style="text-align: right;">76.6</td>
+<td style="text-align: right;">84.3</td>
+<td style="text-align: right;">+7.7</td>
+</tr>
+<tr>
+<td>GLM4.7 thinking</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">84.0</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>Deepseek-v3.2-Speciale thinking</td>
+<td style="text-align: right;">75.2</td>
+<td style="text-align: right;">82.4</td>
+<td style="text-align: right;">+7.2</td>
+</tr>
+<tr>
+<td>Hunyuan2.0-thinking-251109</td>
+<td style="text-align: right;">76.4</td>
+<td style="text-align: right;">82.4</td>
+<td style="text-align: right;">+6.0</td>
+</tr>
+<tr>
+<td>Kimi K2 thinking</td>
+<td style="text-align: right;">74.2</td>
+<td style="text-align: right;">81.0</td>
+<td style="text-align: right;">+6.8</td>
+</tr>
+<tr>
+<td>DeepSeek-V3.2 thinking</td>
+<td style="text-align: right;">67.2</td>
+<td style="text-align: right;">73.8</td>
+<td style="text-align: right;">+6.6</td>
+</tr>
+<tr>
+<td>Seed-1.6-251015 thinking</td>
+<td style="text-align: right;">65.8</td>
+<td style="text-align: right;">72.2</td>
+<td style="text-align: right;">+6.4</td>
+</tr>
+<tr>
+<td>GLM4.6 thinking</td>
+<td style="text-align: right;">62.5</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+<tr>
+<td>Minimax M2</td>
+<td style="text-align: right;">53.0</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">—</td>
+</tr>
+</tbody>
+</table></div>
+<p>These are transcriptions of the charts' “Average (%)” bars. Tencent
+supplies no per-language denominators or weighting formula with those
+bars. Across the nine February model averages, the unweighted mean is
+82.1%, median 82.4%, population SD 5.6 pp, and range 19.1 pp. Those are
+descriptive statistics of these named configurations. All eight
+recurring labels improved by 6.0–8.4 pp. DeepSeek Speciale rose from
+below Hunyuan to a tie at displayed precision. The removal of two rows
+could increase a microaverage by at most 0.2 pp on its own with frozen
+grades. The aggregate changes cannot isolate the effects of revised
+tests, sandbox changes, or inference settings. The first December chart
+has the same displayed scores for its nine entries. The December 8 chart
+added Hunyuan. <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/5b383fa/figures/leaderboard_acb-v2.png">December
+4 chart</a> · <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/9badc8ae5d9c4e4004cc7501efacf03c1c0ec350/figures/leaderboard_acb-v2.png">December
+8 chart</a> · <a
+href="https://autocodebench.github.io/images/leaderboard_acb-v2-260217.png">February
+chart</a></p>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Language</th>
+<th style="text-align: right;">December tasks</th>
+<th style="text-align: right;">February tasks</th>
+<th style="text-align: right;">February easy / medium / hard</th>
+<th style="text-align: right;">Median prompt words</th>
+<th style="text-align: right;">Median reference lines</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C++</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">1 / 9 / 38</td>
+<td style="text-align: right;">631.5</td>
+<td style="text-align: right;">155</td>
+</tr>
+<tr>
+<td>C#</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">16 / 11 / 23</td>
+<td style="text-align: right;">545.5</td>
+<td style="text-align: right;">118</td>
+</tr>
+<tr>
+<td>Dart</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">5 / 6 / 39</td>
+<td style="text-align: right;">475.5</td>
+<td style="text-align: right;">83.5</td>
+</tr>
+<tr>
+<td><strong>Elixir</strong></td>
+<td style="text-align: right;"><strong>50</strong></td>
+<td style="text-align: right;"><strong>50</strong></td>
+<td style="text-align: right;"><strong>2 / 18 / 30</strong></td>
+<td style="text-align: right;"><strong>275</strong></td>
+<td style="text-align: right;"><strong>46</strong></td>
+</tr>
+<tr>
+<td>Go</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">9 / 6 / 35</td>
+<td style="text-align: right;">306.5</td>
+<td style="text-align: right;">76.5</td>
+</tr>
+<tr>
+<td>Java</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">8 / 16 / 26</td>
+<td style="text-align: right;">608</td>
+<td style="text-align: right;">97</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">6 / 8 / 33</td>
+<td style="text-align: right;">340</td>
+<td style="text-align: right;">66</td>
+</tr>
+<tr>
+<td>Julia</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">5 / 11 / 34</td>
+<td style="text-align: right;">289</td>
+<td style="text-align: right;">43</td>
+</tr>
+<tr>
+<td>Kotlin</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">12 / 13 / 25</td>
+<td style="text-align: right;">459.5</td>
+<td style="text-align: right;">81</td>
+</tr>
+<tr>
+<td>Perl</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">14 / 13 / 23</td>
+<td style="text-align: right;">302.5</td>
+<td style="text-align: right;">36.5</td>
+</tr>
+<tr>
+<td>PHP</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">11 / 18 / 21</td>
+<td style="text-align: right;">284</td>
+<td style="text-align: right;">69.5</td>
+</tr>
+<tr>
+<td>Python</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">7 / 4 / 42</td>
+<td style="text-align: right;">388</td>
+<td style="text-align: right;">59</td>
+</tr>
+<tr>
+<td>R</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">4 / 10 / 36</td>
+<td style="text-align: right;">325</td>
+<td style="text-align: right;">59.5</td>
+</tr>
+<tr>
+<td>Racket</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">1 / 23 / 26</td>
+<td style="text-align: right;">316.5</td>
+<td style="text-align: right;">40.5</td>
+</tr>
+<tr>
+<td>Ruby</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">7 / 13 / 30</td>
+<td style="text-align: right;">355</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0 / 7 / 43</td>
+<td style="text-align: right;">502</td>
+<td style="text-align: right;">147</td>
+</tr>
+<tr>
+<td>Scala</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">4 / 6 / 40</td>
+<td style="text-align: right;">488</td>
+<td style="text-align: right;">73</td>
+</tr>
+<tr>
+<td>Shell</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">9 / 10 / 31</td>
+<td style="text-align: right;">328.5</td>
+<td style="text-align: right;">42</td>
+</tr>
+<tr>
+<td>Swift</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">7 / 11 / 32</td>
+<td style="text-align: right;">308.5</td>
+<td style="text-align: right;">54</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">8 / 4 / 38</td>
+<td style="text-align: right;">307</td>
+<td style="text-align: right;">56.5</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td style="text-align: right;"><strong>1,000</strong></td>
+<td style="text-align: right;"><strong>998</strong></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+<td style="text-align: right;"></td>
+</tr>
+</tbody>
+</table></div>
+<p>For <strong>each</strong> language and <strong>each</strong> model,
+V2 Pass@1 is <strong>unpublished</strong> in the audited leaderboard.
+Language means, medians, across-model variation, rank, uncertainty, and
+stronger-versus-weaker model trends are therefore unavailable. A
+top-line score cannot recover those fields. For example, even if the
+91.3% bar were a task-weighted microaverage over 998 items, rounding is
+consistent with 911 passes and 87 misses. Any one language could have
+anywhere from 0% to 100% individually, and the same total could coexist
+with either direction of a comparison between Elixir and Python. The two
+versions and the earlier Full data were checksum-verified against the
+pinned public files. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2.jsonl">December
+data</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2-260217.jsonl">February
+data</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench.jsonl">Original
+Full data</a></p>
+<p>The frequently quoted <strong>97.5%</strong> is the proportion of
+original Full Elixir tasks solved by at least one tested configuration,
+which the authors call the current upper bound. Table 4 of the same
+study gives the early GPT-5 configuration 84.3% on Elixir and 44.4% on
+Python on Full. Gemini 2.5 Flash records 64.0% on Elixir and 70.0% on
+Kotlin. These Full results illustrate both the large original-set gaps
+for some models and the fact that even Full did not have an Elixir win
+for every model. <a href="https://openreview.net/pdf?id=fN0MED2Idq">ICLR
+paper, Table 4</a></p>
+<h2 id="3-evidence-of-unequal-task-difficulty">3. Evidence of unequal
+task difficulty</h2>
+<h3 id="full-file-measurements-and-a-topic-sample">Full-file
+measurements and a topic sample</h3>
+<ul>
+<li>Across all 998 items, Elixir has the shortest median statement at
+275 whitespace-delimited words. Its median stays at 264.5 after fenced
+code is removed, versus 388 for Python, 297.5 for Go, 307 for
+TypeScript, 340 for JavaScript, 491.5 for Rust, 550 for Java, and 609
+for C++. The Elixir references are also shorter than those for these
+seven languages, with 46 nonblank lines at the median. Julia, Perl,
+Racket, and Shell have shorter references than Elixir. Boilerplate,
+typing, standard-library functions, comments, and coding styles all
+affect these counts. Prompt length can reflect extra requirements or
+extra explanation. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2-260217.jsonl">February
+data</a></li>
+<li>The February labels put 30 of 50 Elixir items in “hard,” versus 42
+of 53 Python and 43 of 50 Rust, but just 26 of 50 Java. Only two Elixir
+items are “easy,” compared with seven Python, nine Go, and eight
+TypeScript. The labels are poor evidence for equivalence. For example,
+the “hard” Elixir maximum-subarray problem and “easy” Java timed,
+bounded, thread-safe queue differ considerably in the number and kind of
+requirements. A blind human study could score these dimensions
+independently. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2-260217.jsonl">February
+data, rows 193 and 256</a></li>
+<li>The Python references import NumPy in seven tasks, Pillow in one and
+scikit-learn in one, by a static parse of all 53 outputs. No Elixir
+reference uses <code>Mix.install/1</code>. That is a dependency
+indicator and does not establish which packages the sandbox preloads or
+what a prompt requires. The Elixir prompts still include
+language-specific requirements such as Unicode grapheme segmentation,
+Erlang term order for deterministic BFS, structs, atoms, and
+string-conversion protocols. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2-260217.jsonl">February
+data</a></li>
+</ul>
+<p>I drew a reproducible 12-row simple random sample within each of the
+eight focal languages and coded one dominant topic per prompt.
+“Discrete” includes tree, graph, and combinatorial problems.
+“Application” includes state machines, application interfaces, and
+simulations. “Numerical” includes scientific or numerical modeling.
+“Text/data” includes representation and serialization. The seed and 96
+row labels are in <code>analyze.py</code>. This was a single-reviewer,
+unblinded topic audit. Mixed-topic classifications depend on the rubric.
+Twelve rows per language lend context to the case studies, with limited
+precision for overall topic prevalence.</p>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Language</th>
+<th style="text-align: right;">Discrete</th>
+<th style="text-align: right;">Application</th>
+<th style="text-align: right;">Numerical</th>
+<th style="text-align: right;">Text/data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elixir</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr>
+<td>Python</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>JavaScript</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Go</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Java</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>C++</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="comparative-case-studies">Comparative case studies</h3>
+<p>The rows below were chosen for overlapping concepts, useful
+contrasts, and counterexamples. They are a qualitative supplement to the
+sample above. IDs are 1-based line numbers in the checksum-pinned
+February JSONL, which has no task ID field. The comparison considers the
+algorithm, contract, and coverage. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2-260217.jsonl">Problem
+statements, signatures, references, and full suites</a></p>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<thead>
+<tr>
+<th>February rows</th>
+<th>What actually differs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elixir <strong>161</strong> / Python <strong>559</strong>,
+Tic-Tac-Toe</td>
+<td>Elixir checks eight fixed winning lines and distinguishes a draw
+from an ongoing board. Python checks terminal states, searches for an
+optimal move, accepts equivalent optima, and must preserve the input
+board. Both are labeled hard and the Python statement is shorter.</td>
+</tr>
+<tr>
+<td>Elixir <strong>160</strong> / C++ <strong>9</strong>, Kalman
+filters</td>
+<td>Elixir supplies scalar prediction and update formulas and needs one
+map and a pair of scalar estimates. C++ supplies a nonlinear motion and
+observation model, a 3×3 covariance, angle wrapping, and landmark
+updates. The extra matrix and boundary reasoning would survive a
+port.</td>
+</tr>
+<tr>
+<td>Elixir <strong>159</strong> / C++ <strong>29</strong>, camera
+projection</td>
+<td>Elixir computes one 3×4 matrix following a specified homography
+decomposition, normalization and orientation convention. C++
+additionally implements transformation factories, matrix composition,
+camera view and projection, and point transformation. Elixir still needs
+matrix inversion, cross products and numeric tolerance.</td>
+</tr>
+<tr>
+<td>Elixir <strong>169/190</strong> / Rust <strong>750</strong>, land
+components</td>
+<td>Elixir counts 4-connected components and returns one integer. Rust
+handles 8-way adjacency, per-seed area, enumeration, maximum, and
+whole-grid connectivity with mutable visitation state. The Rust prompt
+is labeled medium while both Elixir rows are hard.</td>
+</tr>
+<tr>
+<td>Elixir <strong>169/190</strong> / Rust <strong>796</strong>, flood
+fill</td>
+<td>Rust adds caller-selected topology, mutation of the supplied image,
+initial and replacement colors, and counts and percentages. Both use
+grid traversal. Rust specifies invalid seeds, empty grids, and
+same-color behavior, with more observable outputs per call.</td>
+</tr>
+<tr>
+<td>Elixir <strong>165</strong> / Rust <strong>792</strong>, graph
+analysis</td>
+<td>Elixir builds an undirected graph and does BFS with sorted neighbors
+and explicit absent-start behavior. Rust handles directed reachability,
+all mother vertices, strongly connected components, invalid indices, and
+deterministic results. The Rust task requires a different graph
+analysis.</td>
+</tr>
+<tr>
+<td>Elixir <strong>171</strong> / Rust <strong>765</strong>, search
+trees</td>
+<td>Elixir specifies insertion with replacement, lookup, min, max, and
+floor. Rust additionally needs removal, copying, multiple traversal
+orders, and invariant checks. Ownership adds implementation burden, and
+deletion and traversals add requirements in any language.</td>
+</tr>
+<tr>
+<td>Elixir <strong>171</strong> / TypeScript <strong>953</strong>,
+search trees</td>
+<td>The direction reverses. TypeScript specifies insert, lookup, and
+height, plus chaining and exact node shape. Elixir adds key-value
+replacement, extrema and floor. A TypeScript class by itself does not
+imply greater algorithmic difficulty.</td>
+</tr>
+<tr>
+<td>Elixir <strong>186</strong> / Java <strong>288</strong>, tree
+diameter</td>
+<td>Elixir returns the maximum edge count for a binary tree. Java
+reconstructs an endpoint-to-endpoint path in an N-ary tree. Both require
+combining subtrees, with Java carrying path information and handling
+arbitrary child degrees.</td>
+</tr>
+<tr>
+<td>Elixir <strong>183</strong> / C++ <strong>39</strong>, interval
+queries</td>
+<td>Both count inclusive interval coverage per query. Elixir leaves the
+method open and suggests up to 100,000 intervals and queries. C++
+explicitly requires a lazy segment tree and supporting operations.
+Elixir's nine assertions use small input counts, including large
+coordinate values. The C++ suite also has small functional checks and
+does not verify the submitted algorithm uses a segment tree.</td>
+</tr>
+<tr>
+<td>Elixir <strong>194</strong> / Go <strong>248</strong>, balanced
+binary tree</td>
+<td>Same every-node height predicate with an empty-tree success case.
+Elixir uses tuples and Go pointer-linked nodes. Both are labeled easy.
+The full suites differ in tree shapes and coverage, even where the
+functions could share one oracle.</td>
+</tr>
+<tr>
+<td>Elixir <strong>156</strong> / TypeScript <strong>996</strong>, chess
+move validation</td>
+<td>Elixir handles a board map, turn ownership, multiple piece rules and
+path restrictions. TypeScript specifies one bishop rule, path blockage
+and own-color occupancy. Elixir's full suite tests only two rejected
+pawn moves. The Elixir task is broader on paper and narrower in what its
+suite enforces.</td>
+</tr>
+<tr>
+<td>Elixir <strong>193</strong> / C++ <strong>8</strong>, sequence
+optimization</td>
+<td>Maximum subarray needs a one-pass recurrence, including all-negative
+and empty inputs. C++ wiggle analysis requests several local statistics
+plus any one longest alternating subsequence in original order. Both are
+hard by label.</td>
+</tr>
+<tr>
+<td>Elixir <strong>153</strong> / Rust <strong>795</strong>, text
+formatting</td>
+<td>Elixir packs words and distributes spaces with left bias and
+separate final-line rules. Rust applies ordered punctuation,
+capitalization, and spacing rules and must count corrections. These are
+distinct types of reasoning. Neither prompt reduces to a library
+call.</td>
+</tr>
+<tr>
+<td>Elixir <strong>177</strong> / TypeScript <strong>998</strong>,
+permutations</td>
+<td>Elixir enumerates all permutations, preserves multiplicity, handles
+empty input, and uses grapheme clusters or printable list values.
+TypeScript computes a single lexicographic successor for a small ASCII
+alphabet, including the terminal ordering case. Neither task is a
+translation and their algorithmic costs are not comparable by reference
+length.</td>
+</tr>
+</tbody>
+</table></div>
+<p>Elixir also includes wildcard decoding at up to 100,000 characters
+(#195), a bin-packing task that asks for optimality on the supplied
+cases (#179), Shamir share generation and reconstruction (#188), and a
+maximum-number merge challenge (#196). Those ask for dynamic
+programming, combinatorial optimization, or modular arithmetic even when
+expressed compactly. At the other extreme, the 4-connectivity island
+pair #169 and #190 shares a task family and a function signature within
+Elixir itself. Duplicating such families reduces effective diversity and
+can give related reasoning or failure modes extra weight. The audit
+establishes imbalance in composition, specification burden, and some
+grading coverage. It cannot estimate any language's overall latent task
+difficulty. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb0000a20405c894062ed65d5e26ceb3afc/autocodebench-v2-260217.jsonl">February
+data</a></p>
+<h2 id="4-benchmark-methodology-audit">4. Benchmark methodology
+audit</h2>
+<p><strong>V2 reused Full’s selected problems and difficulty
+labels.</strong> Tencent describes V2 as a refinement of the original
+dataset using unspecified top proprietary models and a sandbox. To
+identify the exact source, I joined each V2 row’s decoded
+<code>(language, signature)</code> to Full’s
+<code>(language, canonical_solution)</code> by exact string equality.
+Every December row (1,000/1,000) and every February row (998/998)
+resolves to one distinct Full row. Every joined row has the same
+<code>difficulty</code> label as its Full parent. Every joined question
+and full test field differs in exact text, which can include formatting
+changes. This establishes Full ancestry and label carryover, even though
+the edited specifications and tests can change what a task requires. For
+example, February Elixir line 149 (largest values in a BST) maps to Full
+line 1693 and Elixir line 150 (largest histogram rectangle) maps to Full
+line 1615. <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd/AutoCodeBench-V2/README.md">V2
+release documentation</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench.jsonl">Full
+release</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/133eff7/autocodebench-v2.jsonl">December
+V2 release</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+V2 release</a></p>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Verified process and implications</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full source generation</td>
+<td>DeepSeek-V3-0324 generated self-contained code from Stack-Edu GitHub
+snippets using language-specific few-shot prompts. Python, Java, C++,
+JavaScript, Go and Shell used the direct path. The other 14 languages
+used approximate translations of unused candidates, including Python →
+Elixir, JavaScript → TypeScript and C++ → Rust. These are distinct
+source and selection paths. The Elixir translation template requests
+equivalent coverage and complexity, but actual equivalence and failure
+rates require an audit of candidate pairs. <a
+href="https://openreview.net/pdf?id=fN0MED2Idq">Paper, §2.1 and Table
+2</a> · <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/tree/e611ddd/AutoCodeGen">Public
+generation workflow</a> · <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd/AutoCodeGen/templates/translate_templates/elixir.txt">Elixir
+translation prompt</a></td>
+</tr>
+<tr>
+<td>Full test generation and validation</td>
+<td>DeepSeek-V3-0324 generated test inputs alongside reference code. The
+sandbox provided expected outputs, and the generator assembled tests and
+wrote the user-facing task from solution and tests. Published generation
+code drops unsuccessful executions. This validates consistency with the
+reference at sampled inputs and creates a selection gate whose language
+dependence cannot be measured from survivors. <a
+href="https://openreview.net/pdf?id=fN0MED2Idq">Paper, §2.1.1–2.1.3</a>
+· <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd/AutoCodeGen/src/filter_data.py">Generation
+filtering code</a></td>
+</tr>
+<tr>
+<td>Full difficulty, quality and diversity gates</td>
+<td>DeepSeek-Coder-V2-Lite generated ten samples per candidate. A
+perfect 10/10 removed it. Surviving labels are hard for 0/10, medium for
+1–5/10 and easy for 6–9/10. DeepSeek-R1-0528 checked specification/test
+consistency, and DeepSeek-V3-0324 labeled categories for cyclic
+sampling. The paper reports 25.1% removal at the difficulty gate for
+Python. It attributes the unusually high scores of strong models on some
+low-resource languages to easy candidates escaping this filter. It
+provides neither a controlled Elixir–Python estimate of this effect nor
+Elixir’s rejection denominator. The paper’s manual validation covered
+Python, C++, Java, JavaScript, Go and Shell. <a
+href="https://openreview.net/pdf?id=fN0MED2Idq">Paper, §2.1.4, Table 3,
+§3.3 and Appendix A</a></td>
+</tr>
+<tr>
+<td>Full → V2</td>
+<td>The two public releases allow measurement of which Full survivors
+were retained and which fields changed. The available V2 methodology
+provides no refiner identities, model-to-language assignments, prompts,
+candidate rankings, thresholds, validation failure logs, independent
+difficulty judgments, or selection rationale for refinement-stage drops.
+Iterative refinement can introduce differential selection or change
+requirements, but its impact remains unidentified. <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd/AutoCodeBench-V2/README.md">V2
+release documentation</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/tree/6f8dedb">Public
+dataset files</a></td>
+</tr>
+</tbody>
+</table></div>
+<p>The Full-to-February selection was not uniform over inherited labels.
+Elixir retained 2/13 easy, 18/46 medium and 30/139 hard Full tasks.
+Python retained 7/36 easy, 4/26 medium and 42/134 hard tasks. That
+yields 36% medium and 60% hard in V2 Elixir versus 7.5% medium and 79.2%
+hard in V2 Python. Rust retained 0/8 easy, 7/38 medium and 43/153 hard.
+TypeScript retained 8/23 easy, 4/26 medium and 38/150 hard. These are
+exact selection rates among released Full tasks. They show how V2
+changed the <strong>inherited</strong> mix without equating difficulty
+across languages. In particular, Elixir retained a smaller share of its
+easy-labeled pool than Python did. A story in which V2 simply chose more
+easy-labeled Elixir questions fits these counts poorly. The earlier
+weak-filter mechanism remains plausible precisely because a label such
+as hard can reflect filter-model failure in expressing a simple
+solution. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench.jsonl">Full
+release</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+V2 release</a> · <a
+href="https://openreview.net/pdf?id=fN0MED2Idq">Paper, Table 3</a></p>
+<p><strong>Direct test of the filter hypothesis.</strong> The ancestry
+join confirms that V2 inherits survivors of the potentially biased gate
+and uses its labels. Testing how many equally easy problems slipped
+through requires the rejected pool. Obtain source-to-translation IDs,
+all candidate versions including failures, exact model revisions and
+prompts, all ten completions, per-attempt grader outcomes, prefilter
+counts, Critic decisions, category sampling decisions and V2 refinement
+acceptance logs. Take a stratified random sample of prefilter
+candidates, create independently checked Python/Elixir versions of each
+specification, and execute DeepSeek-Coder-V2-Lite with the original
+decoding settings and a common semantic oracle. Estimate the paired
+difference in 10/10 removal rates among independently easy tasks.
+Separately report prompt extraction, compilation, runtime and semantic
+failures. Paired resampling by source task preserves dependence. Replay
+the downstream gates under the original filter, a separately calibrated
+multi-model filter and an independently rated filter, then compare which
+difficulty distributions and score gaps survive. With public data alone,
+this experiment can be reconstructed on newly authored tasks to test the
+mechanism, while historical error rates and causal effects on V2 require
+the original logs.</p>
+<p>Full (3,920 tasks), Lite (1,586 selected for prior model solvability)
+and Complete (1,000 Lite-derived three-shot completion tasks) are
+separate from December V2 (1,000) and February V2 (998).
+AutoCodeInstruct’s Qwen filters concern a training dataset. Neither its
+thresholds nor Lite’s model-solvability selection describe V2
+construction. <a href="https://openreview.net/pdf?id=fN0MED2Idq">ICLR
+paper, §2.2 and §4</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/tree/6f8dedb">Tencent
+release list</a></p>
+<h2 id="5-evaluation-and-sandbox-audit">5. Evaluation and sandbox
+audit</h2>
+<p><strong>Known-wrong answers passed grading on nine of 50 Elixir
+tasks.</strong> Each affected test function prints comparisons but lets
+the process succeed after a mismatch. I kept the test suites intact,
+deliberately changed task answers, and checked both the public V2
+sandbox service and a native replay. Each confirmed false pass printed a
+mismatch, exited with code 0, and printed the completion marker. The
+published service returned <code>PASSED</code>. The nine tasks could
+account for up to 18 percentage points of a model's Elixir score if a
+stricter grader flipped all nine of its answers. The observed effects on
+the leaderboard models remain unknown. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+dataset</a>, <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd60b3cb03a5961ccd41691863f4ed5e493/AutoCodeBench-V2/call_sandbox.py">pinned
+evaluation client</a>, <a
+href="https://hub.docker.com/layers/hunyuansandbox/multi-language-sandbox/v2/images/sha256-949d69be3972ebb1ca2f8873e01b07bf70d6de35d6f459d2e41497a970f06f42">pinned
+sandbox image</a></p>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<thead>
+<tr>
+<th>February Elixir row</th>
+<th>Deliberately wrong behavior</th>
+<th>What the published suite does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>158 Text normalization and search</td>
+<td>Find no document for any query</td>
+<td>Prints comparison results</td>
+</tr>
+<tr>
+<td>169 Counting islands</td>
+<td>Return zero for every grid</td>
+<td>Interpolates booleans into log output</td>
+</tr>
+<tr>
+<td>170 HTTP parser</td>
+<td>Return two empty maps for every request</td>
+<td>Prints header and cookie comparison booleans</td>
+</tr>
+<tr>
+<td>174 RISC-V log parser</td>
+<td>Return an empty instruction list</td>
+<td>Prints a failure label and diff, then continues</td>
+</tr>
+<tr>
+<td>175 Alphanumeric reformatting</td>
+<td>Return an empty string</td>
+<td>Prints comparison booleans</td>
+</tr>
+<tr>
+<td>178 Ball game simulation</td>
+<td>Always report zero passes</td>
+<td>Prints pass/fail messages and continues</td>
+</tr>
+<tr>
+<td>179 Bin packing</td>
+<td>Always return zero bins</td>
+<td>Prints calls to the packing validator</td>
+</tr>
+<tr>
+<td>188 Shamir secret reconstruction</td>
+<td>Always reconstruct zero</td>
+<td>Prints comparison booleans</td>
+</tr>
+<tr>
+<td>196 Maximum number from two lists</td>
+<td>Return an empty list</td>
+<td>Prints comparison booleans</td>
+</tr>
+</tbody>
+</table></div>
+<p>The released <code>output</code> itself emitted failing comparisons
+at #170 (one cookie case) and #196 (two of eleven cases) while
+satisfying the pass conditions in native replay. The second
+island-counting suite, #190, rejects the same always-zero solution with
+an ExUnit failure. #161 also rejects a wrong answer, through an explicit
+raise. #194 Elixir and #248 Go both reject an always-false balanced-tree
+checker and pass the supplied <code>output</code>. The Elixir suite
+checks eight fixtures and the Go suite fourteen, including internal
+imbalance and near-threshold cases. This shows that grading quality
+varies within Elixir as well as between comparable tasks. Conditional on
+task-weighted aggregation, the maximum contribution of the nine
+reporting-only rows is 9/998, or 0.90 pp on an overall model average.
+This is a bound on those nine rows alone. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+dataset</a></p>
+<p>Assertions alone also leave important gaps. At #156 the entire chess
+suite is two invalid moves. An always-invalid implementation passes when
+the module declarations are preserved. An added e2→e3 positive test
+rejects it and accepts the supplied implementation. #183 accepts a
+brute-force solution that scans every interval for every query. Its nine
+cases cover inclusion boundaries, negatives, duplicates and empties but
+have at most three intervals and five queries, despite the specification
+envisaging lists of 100,000. At #159 the camera projection task accepts
+a wrong output shape for its approximate-comparison cases. A separately
+implemented solution and a version returning <code>[[]]</code> on the
+non-identity test inputs both passed. The first case uses exact
+equality, but later cases compare zipped rows and zipped elements
+without checking dimensions. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+dataset</a></p>
+<p>The problem extends beyond Elixir. A Perl #473 function returning an
+empty string passed its print-only checks. The test emits uppercase
+<code>FAILED</code> and the image's Perl matcher looks for lowercase
+<code>failed</code>. Ruby #699 prints its <code>atoi</code> comparisons
+and accepted an always-zero implementation. The same service rejected
+the TypeScript #973 mutant as <code>WRONG_ANSWER</code> despite an exit
+code of 0. A native Node 24.2.0 replay printed 16
+<code>Assertion failed</code> lines to stderr, matching the configured
+TypeScript error phrase. These probes establish false positives and
+working controls, with unknown prevalence in the other languages. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+dataset</a>, <a
+href="https://hub.docker.com/layers/hunyuansandbox/multi-language-sandbox/v2/images/sha256-949d69be3972ebb1ca2f8873e01b07bf70d6de35d6f459d2e41497a970f06f42">published
+sandbox layers</a></p>
+<p><strong>Markdown extraction also produces false negatives.</strong>
+The V2 client takes the first fenced code block, removes text through
+the last closing reasoning tag when present, and makes an Elixir-only
+rewrite. It replaces a first-line module declaration with the first line
+from <code>signature</code>, or wraps module-body code using that
+declaration. This can rescue a bare function or a wrong module name. It
+also rejects a legitimate module layout at #156. The supplied answer
+declares <code>Chess.Piece</code>, <code>Chess.Board</code>, then
+<code>Chess</code>. The extractor renames the first module to
+<code>Chess</code>, making <code>Chess.Piece</code> undefined at compile
+time. The unmodified code passes the original tests and the additional
+correct-move assertion. Go #207 exposed a second verified harness
+collision. Its February test code declares the ring-buffer type,
+constructor, and methods requested of the candidate. The official Go
+splicer combines both bodies after import processing. The service
+rejected both released implementations with duplicate declarations. The
+V2 <code>output</code> also produced undefined <code>errors</code>
+references. The nearby #248 Go control accepted its implementation and
+rejected its always-false mutant after the container’s build cache was
+warm. <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd60b3cb03a5961ccd41691863f4ed5e493/AutoCodeBench-V2/call_sandbox.py">V2
+client</a>, <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+dataset</a>, <a
+href="https://hub.docker.com/layers/hunyuansandbox/multi-language-sandbox/v2/images/sha256-949d69be3972ebb1ca2f8873e01b07bf70d6de35d6f459d2e41497a970f06f42">published
+sandbox layers</a></p>
+<p><strong>Execution and numeric strictness.</strong> I retrieved the
+image's published source and configuration layers, including
+<code>code_config.yaml</code>, <code>code_splicer.py</code>,
+<code>executor.py</code>, and <code>code.py</code>. In the benchmark's
+function-plus-test mode, the client submits the extracted code and the
+entire public <code>full_test_func</code>, and checks for a sandbox pass
+and the marker in stdout. The Elixir runner concatenates both sources,
+invokes <code>elixir test.ex</code>, and checks resource errors, nonzero
+status, and the case-sensitive phrase <code>assertion fails</code>. Its
+pass decision does not interpret boolean or arbitrary failure output. Go
+uses <code>go test -v</code>, Rust
+<code>cargo test -- --nocapture</code>, TypeScript <code>npx tsx</code>,
+C++ <code>g++</code> then a native executable, Python
+<code>python3</code>, JavaScript <code>node</code>, and Java a JVM
+worker. The client requests 30 seconds and waits 60 seconds for HTTP.
+The image honors the timeout request, with separate compilation and
+execution phases in some runners. The focal languages use a configured
+20,480 MB memory default. The subprocess source says CPU percentage
+enforcement was removed. Runtime initialization, native compilation,
+dependency caches, and per-language stderr/stdout rules still differ.
+Equality and exception expectations live in the suite, including
+Elixir's <code>==</code> numeric equivalence for integer and float and
+its task-specific floating tolerances. There is no single numeric oracle
+shared across these V2 language sets. The publicly downloadable tests
+are hidden from the documented inference prompt. The audit could not
+establish the presence of any extra publisher-only tests. <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd60b3cb03a5961ccd41691863f4ed5e493/AutoCodeBench-V2/call_sandbox.py">V2
+client</a>, <a
+href="https://hub.docker.com/layers/hunyuansandbox/multi-language-sandbox/v2/images/sha256-949d69be3972ebb1ca2f8873e01b07bf70d6de35d6f459d2e41497a970f06f42">sandbox
+layers</a>, <a href="https://hexdocs.pm/elixir/Kernel.html#==/2">Elixir
+equality documentation</a></p>
+<p>The image reports Elixir 1.12.2/OTP 24, Go 1.24.5, Python 3.11.5,
+Node 18.20.8, Ruby 3.0.2, Perl 5.34.0, JDK 17.0.15, Rust 1.88.0, and GCC
+12.3.0. I ran the AMD64 image offline under emulation. The bundled BEAM
+initially crashed before running any Elixir code. Setting its VM flags
+to <code>+JPperf true +S 2:2</code> let the untouched grader and runner
+execute. A second replay used native macOS Elixir 1.20.5/OTP 29, with
+process and network restrictions. The two environments matter at #158.
+The released <code>output</code> passes on the newer runtime but fails
+to compile on the old image because of a Unicode regex property. I based
+the old-runtime #158 mutant on the compatible Full implementation in
+<code>signature</code>. The grading controls confirm task-level logic,
+and local emulation timings cannot be attributed to models or used for
+language comparisons. <a
+href="https://hub.docker.com/layers/hunyuansandbox/multi-language-sandbox/v2/images/sha256-949d69be3972ebb1ca2f8873e01b07bf70d6de35d6f459d2e41497a970f06f42">Pinned
+sandbox image</a> · <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+data</a></p>
+<p>Median full-test script lines were 62.5 Elixir, 83 Python, 97 Rust,
+105 JavaScript, 105.5 Java, 123.5 TypeScript, 137.5 C++, and 150 Go.
+This is a code-size measure. One assertion can cover a vector of inputs
+and 16 printed comparisons can enforce zero outcomes. ExUnit
+comparisons, Go's subtests, Node's assertions, and data-driven test
+loops need separate logic to count distinct enforced cases. The relevant
+unit for a fuller audit is the distinct spec condition exercised and the
+fraction of validated wrong implementations it rejects. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+dataset</a></p>
+<p><strong>February 17 change.</strong> The 998 retained questions pair
+exactly to December by question text. Their <code>language</code>,
+<code>difficulty</code>, <code>signature</code>, and <code>output</code>
+are unchanged. The release drops December C++ rows 8 (Texture Management
+System) and 30 (Logger System Implementation). Test code changed on 93
+retained rows, including 24 Kotlin, 20 R, 12 Python, 10 Swift, 7 shell,
+5 Ruby, 4 Perl, 3 Julia, 2 TypeScript, 2 C#, 2 Go, 1 Dart, and 1 Scala.
+All 50 Elixir test fields stayed byte-identical. The fixes focus on test
+entry calls, completion markers, or missing test imports. The exact
+marker was missing from 18 December files (11 Python, 4 Perl, 2 Julia, 1
+C#) and appears in every February file. Twelve Python suites gained
+explicit test invocations. In #546, the same released implementation
+exits 0 without running tests or printing the marker on December's
+suite. It runs all 20 checks and satisfies the marker rule on February's
+suite. The official service returned <code>PASSED</code> for both
+subprocesses. The official client rejects the December outcome because
+stdout lacks the marker. The GitHub update changed the V2 README and
+leaderboard figure and left the client identical. Docker Hub dates the
+only public V2 tag to December 4, 2025. These records verify
+test-payload and leaderboard changes. They do not identify a new public
+February sandbox build or reveal which fix changed each model's score.
+<a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/133eff7/autocodebench-v2.jsonl">Original
+V2 dataset</a>, <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+dataset</a>, <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/commit/e611ddd60b3cb03a5961ccd41691863f4ed5e493">February
+GitHub commit</a>, <a
+href="https://hub.docker.com/v2/repositories/hunyuansandbox/multi-language-sandbox/tags/v2">Docker
+tag metadata</a></p>
+<p><strong>Error analysis and checked scope.</strong> The release
+supplies one <code>output</code> and one <code>signature</code> per
+task, both often implementation-sized. Neither field identifies a
+leaderboard run. As §4 establishes, the <code>signature</code> field
+holds the original Full reference, which predates the edited V2
+requirements. On all 50 Elixir rows the official-extracted
+<code>output</code> passed 39 times in the public image and 40 times in
+the native replay. The 11 public-image failures comprised seven
+assertion mismatches and four compilation errors, all of which the
+service labeled <code>RUNTIME_ERROR</code>. Running the original Full
+<code>signature</code> directly against the V2 suite passed 35 times in
+both environments. Examples span incorrect ordering (#149), a
+nonexistent early-return function (#154), an undefined type (#155), and
+evaluator-induced name rewriting (#156). Because the supplied artifacts
+have unclear provenance, these are fixture outcomes. There is no public,
+labelled per-model corpus for estimating language differences in syntax,
+algorithm, edge-case, runtime, or infrastructure error rates. The audit
+ran these public test payloads and extracted solutions in the pinned
+official image and repeated them in a network-restricted native
+environment. The probes establish artifact behavior under the tested
+configurations. Historical submissions, environment differences, and the
+distribution of real model errors remain unknown. <a
+href="https://huggingface.co/datasets/tencent/AutoCodeBenchmark/blob/6f8dedb/autocodebench-v2-260217.jsonl">February
+dataset</a>, <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd60b3cb03a5961ccd41691863f4ed5e493/AutoCodeBench-V2/call_sandbox.py">pinned
+client</a></p>
+<h2 id="6-difficulty-controlled-evaluation-protocol">6.
+Difficulty-controlled evaluation protocol</h2>
+<p>I did not generate matched completions for the nine February
+leaderboard configurations. The public files lack those runs and this
+environment has no configured model API credentials for them. The native
+and official sandbox probes in §5 evaluate grading only. The closest
+executed independent model comparisons are in §8.</p>
+<ol type="1">
+<li><strong>Sample semantic tasks.</strong> With seed 260217, group the
+998 rows by underlying problem family before sampling. Mark near
+duplicates such as #169/#190 and #194/#248. Sample approximately 240
+unique families, aiming for 12 from each source language with a
+prespecified topic and scope mix. Publish the sampled IDs, exclusion
+reasons, and source origin. A task that requires an ecosystem-specific
+framework may be impossible to port faithfully and should count toward
+separately reported portability attrition. Keep such tasks for an
+ecosystem-specific experiment. Include a separately reported held-out
+set of new tasks to probe recognition of public problems.</li>
+<li><strong>Freeze a neutral specification and oracle.</strong> Preserve
+functional requirements, constraints, valid input domain, exception
+semantics and allowed outputs. Give two independent reviewers the
+original and target contracts with outcome data hidden. Have them
+certify requirements line by line and adjudicate disagreements. Include
+at least one reviewer familiar with the target language. Where the
+original is underspecified, publish the clarification before inference
+and have reviewers approve it for all languages. Use one
+language-neutral oracle and shared fixtures, plus boundary cases,
+property-based comparisons against a simple oracle and mutation checks.
+For the #194/#248 pilot, express the tree as nullable nodes with two
+children and 32-bit values, impose the same size cap, and add trees
+where only a deep descendant is imbalanced. Generate native tuples,
+pointers or objects in the harness. The model writes the tree predicate
+and receives the same information about the adapter in every
+language.</li>
+<li><strong>Make runtimes comparable.</strong> Pin images, toolchains,
+library versions, CPU and memory. Use equivalent default libraries and
+allow idiomatic internal abstractions. Define Unicode, integer overflow,
+ordering, floating-point tolerance, ties, exception mapping and
+mutability before generation. Compile and run known answers and
+intentionally defective references for every adapter. Report both a
+common resource budget and a reference-calibrated sensitivity check for
+startup or interpreter overhead. Keep stdout for diagnostics and an
+out-of-process judge for verdicts.</li>
+<li><strong>Cross tasks, languages and models.</strong> Generate for all
+20 languages on each portable problem, with the eight focal languages as
+the primary analysis. Select several model families and both stronger
+and weaker configurations. Freeze checkpoint, temperature, effort, token
+and wall-clock limits, tool access, context and prompts. Gate any
+retries on logged infrastructure errors only. Specify one draw per task
+and language for Pass@1. For Pass@k, preregister <code>k</code> and the
+number of draws, keep all completions, and use
+<code>1 - choose(n - c, k) / choose(n, k)</code> for <code>c</code>
+correct out of <code>n</code> draws when the sampling design warrants
+it. Run separate arms for first attempt and feedback-enabled repair. <a
+href="https://arxiv.org/abs/2107.03374">Pass@k estimator, Chen et
+al.</a></li>
+<li><strong>Publish paired outcomes and stage-specific
+failures.</strong> Save semantic family, source language, topic,
+contract ID, target language, model and seed, raw and extracted code,
+image digest, reference result, check-level outcomes, runtime and
+failure stage. Code outcomes first by missing/truncated answer,
+extraction, compile/import, adapter mismatch, uncaught exception,
+timeout, assertion failure, and infrastructure error. Then classify
+semantic mistakes such as incorrect algorithm, misunderstood
+requirement, standard-library misuse, type/shape mismatch, and missed
+edge cases, with dual review of a sample. Record an infrastructure
+outage separately from model correctness and publish counts and
+sensitivity to its treatment.</li>
+<li><strong>Estimate effects on paired tasks.</strong> The primary
+contrast is the mean per-task Elixir minus Python success difference
+with model configurations weighted equally as a fixed panel. Compute
+each model's paired effect and discordant counts, then show
+equal-family, median-model and leave-one-family-out sensitivity.
+Resample whole semantic families, carrying every language and model
+result together and preserving prespecified strata. Within individual
+models use exact McNemar tests at the task level if semantic families
+are independent. Report confidence intervals and control false
+positives, for example with Holm adjustment across secondary language
+comparisons. Use task or family effects, model effects and
+language-by-model interactions in a supplementary hierarchical logistic
+analysis. Examine imbalance by source language and sensitivity to
+invalid references, weak suites and topic weighting.</li>
+</ol>
+<p>Approximate planning calculation before multiplicity correction. At
+30% discordant pairs, detecting a 10 pp paired difference with roughly
+80% power takes about 235 independent task families at a two-sided 5%
+threshold by a normal approximation. A 5 pp difference takes roughly
+940. Run a pilot to estimate discordance, clustering and attrition, then
+simulate power for the actual contrast and correction plan.</p>
+<h2 id="7-statistical-conclusions">7. Statistical conclusions</h2>
+<ul>
+<li><strong>The finite-corpus quantities in §§2–3 are exact for these
+files.</strong> Prompt length is a measurable property. As a descriptive
+sensitivity analysis, 4,000 within-language task resamples gave 95%
+percentile intervals for the Elixir median word gap of about −161 to −72
+against Python, −287 to −178 against Rust, and −91 to +14 against Go.
+These are conditional on independently resampling the released rows.
+Shared task templates and the nonrandom pipeline limit any
+generalization, and the intervals measure words only.</li>
+<li><strong>The missing V2 outcomes make even crude performance
+comparisons inestimable.</strong> Neither a language-level interval nor
+difficulty-stratified performance, topic adjustment, language rankings,
+exclusion sensitivity, or regression of V2 correctness can be recovered
+from model totals. A finite-set score is exact given frozen grades. As a
+scale example for extrapolating from 50 independent tasks, 40/50
+successes give a Wilson 95% interval of about 67–89%. Task-family
+clustering, inherited tasks and reused model families make treating the
+50 or the nine model configurations as independent replicates especially
+misleading. <a
+href="https://www.itl.nist.gov/div898/handbook/prc/section2/prc241.htm">Wilson
+interval reference, NIST</a></li>
+<li><strong>If the missing grades become public</strong>, first report
+per-model observed language differences on the released sets and
+resample task clusters with all model results paired within each
+cluster. Analyze model strength using scores on a held-out set or an
+overall score excluding the compared languages, so the subgroup
+definition does not leak the answer. Compare task-weighted,
+equal-language, equal-model, equal-family, median-model and
+leave-one-out summaries. Stratify by topic, review-rated difficulty, and
+verifier strength, with overlap checks and family-clustered intervals. A
+regression can describe residual differences after measured adjustments.
+Because each original task appears in only one language, a fixed task
+effect would be collinear with language. No observational adjustment can
+recover the paired counterfactual without stronger assumptions or
+matched variants.</li>
+<li><strong>The error distribution is also unavailable for V2 model
+runs.</strong> The known-answer and mutant probes can diagnose harness
+behavior and missed requirements. They cannot show what fraction of real
+failures came from invalid syntax, wrong algorithms, timeouts or runtime
+problems. Avoid labeling an official model's failure without its code,
+extracted source and execution trace.</li>
+</ul>
+<h2 id="8-independent-benchmark-comparison">8. Independent benchmark
+comparison</h2>
+<p><strong>Equivalent algorithmic tasks.</strong> Alex Svetkin reports
+testing five model configurations on the same 100 LeetCode problems
+published between October 2025 and February 2026 (15 easy, 59 medium, 26
+hard). The Elixir solutions were accepted less often than Python and
+Java for every model. Elixir passed more than Rust for Gemini 3 Flash
+Preview, which finished one percentage point below Python. These are
+first-submission acceptance rates. The author provides the general
+dataset and prompting/submission harness, but I did not locate the 2026
+run's exact task manifest or per-problem outcome matrix in the linked
+repository. The judge's hidden cases, language-specific starter code and
+resource rules, and the effects of prior problem exposure remain
+potential confounders. <a
+href="https://hackernoon.com/comparing-llms-coding-abilities-across-programming-languages#results">Author's
+study and results</a>, <a
+href="https://huggingface.co/datasets/whiskwhite/leetcode-complete">dataset</a>,
+<a href="https://github.com/whisk/leetgptsolver">submission
+harness</a>.</p>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align: right;">Elixir</th>
+<th style="text-align: right;">Python 3</th>
+<th style="text-align: right;">Java</th>
+<th style="text-align: right;">Rust</th>
+<th style="text-align: right;">Elixir − Python</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Sonnet 4.5</td>
+<td style="text-align: right;">35%</td>
+<td style="text-align: right;">50%</td>
+<td style="text-align: right;">52%</td>
+<td style="text-align: right;">51%</td>
+<td style="text-align: right;">−15 pp</td>
+</tr>
+<tr>
+<td>Gemini 2.5 Flash</td>
+<td style="text-align: right;">39%</td>
+<td style="text-align: right;">82%</td>
+<td style="text-align: right;">82%</td>
+<td style="text-align: right;">77%</td>
+<td style="text-align: right;">−43 pp</td>
+</tr>
+<tr>
+<td>Gemini 3 Flash Preview</td>
+<td style="text-align: right;">83%</td>
+<td style="text-align: right;">84%</td>
+<td style="text-align: right;">93%</td>
+<td style="text-align: right;">78%</td>
+<td style="text-align: right;">−1 pp</td>
+</tr>
+<tr>
+<td>GPT-5 mini</td>
+<td style="text-align: right;">63%</td>
+<td style="text-align: right;">93%</td>
+<td style="text-align: right;">94%</td>
+<td style="text-align: right;">80%</td>
+<td style="text-align: right;">−30 pp</td>
+</tr>
+<tr>
+<td>Grok Code Fast 1</td>
+<td style="text-align: right;">30%</td>
+<td style="text-align: right;">73%</td>
+<td style="text-align: right;">65%</td>
+<td style="text-align: right;">65%</td>
+<td style="text-align: right;">−43 pp</td>
+</tr>
+</tbody>
+</table></div>
+<p>The author's two-proportion tests treat the observations as unpaired.
+I bounded the two-sided exact McNemar p-value over every paired outcome
+table compatible with each published Python–Elixir margin. For 100
+tasks, let a and b be each language's acceptance count. Loop over the
+integer count c of joint successes from max(0, a+b−100) to min(a, b),
+and evaluate min(1, 2 × Pr[Binomial(a+b−2c, 0.5) ≤ min(a,b)−c]). The
+maximum p-values, in table order, are 0.1284, 0.00000127, 1, 0.00000530
+and 0.00001477. Thus three deficits clear even a five-test Bonferroni
+threshold of 0.01 under every feasible overlap. Sonnet's observed
+15-point deficit alone is insufficient to decide paired significance.
+This calculation conditions on the reported marginals and treats
+problems as independent across IDs. It identifies what the published
+margins imply under every feasible pairing. <a
+href="https://hackernoon.com/comparing-llms-coding-abilities-across-programming-languages#results">Published
+input counts</a>.</p>
+<p><strong>MultiPL-E.</strong> The maintained benchmark translates
+HumanEval and MBPP prompts and tests across languages, including Elixir,
+and has a public evaluator. Its currently served Elixir configurations
+have 161 HumanEval and 397 MBPP tasks. Python is the source
+distribution, and published per-language aggregates can include
+different task subsets. The numbers below are reported percentages, not
+a task-ID-intersected reanalysis. A 2025 ACL paper used 50 samples per
+task at temperature 0.2. Its StarCoder2-3B baseline scored Elixir/Python
+<strong>9.28/30.43</strong> on HumanEval and <strong>6.87/41.98</strong>
+on MBPP. DeepSeek-Coder-1.3B-base scored <strong>15.01/31.77</strong>
+and <strong>4.11/43.36</strong>. Elixir fine-tuning and tokenizer
+adaptation moved these rates and sometimes reduced Python performance. A
+separate 2025 workshop paper reports the GPT-4o baseline at
+<strong>27.5% Elixir, 88.1% Python, and 78.3% C++</strong>. Its
+documentation tool raised Elixir to <strong>46.9%</strong> and Python
+scored <strong>87.3%</strong> with that setup. The evidence is strong
+against a blanket Elixir advantage across model generations and setups.
+These public translated tasks can favor familiarity with the original
+Python problem distribution, and these experiments do not isolate the
+effect of syntax or identify an Elixir-specific effect in V2. <a
+href="https://huggingface.co/datasets/nuprl/MultiPL-E">MultiPL-E dataset
+and changelog</a>, <a
+href="https://datasets-server.huggingface.co/size?dataset=nuprl%2FMultiPL-E">dataset
+sizes</a>, <a href="https://github.com/nuprl/MultiPL-E">public
+harness</a>, <a href="https://aclanthology.org/2025.acl-srw.57.pdf">ACL
+study, Table 4 and Appendix I</a>, <a
+href="https://openreview.net/pdf?id=2ctRK8h3AZ">GPT-4o workshop study,
+Table 3b</a>.</p>
+<p><strong>Same small application, agent-in-the-loop.</strong> In a
+public March 2026 experiment, GPT-5.4 medium in Codex CLI 0.111.0
+implemented the same mini-Git specifications across 25 configurations.
+All three trials passed both specification stages in Elixir and every
+comparison language. Elixir's reported mean total wall time was 152.3 s
+and its average cost <span
+class="math inline">2.40, <em>c</em><em>o</em><em>m</em><em>p</em><em>a</em><em>r</em><em>e</em><em>d</em><em>w</em><em>i</em><em>t</em><em>h</em>91.8<em>s</em>/</span>1.35
+in JavaScript, 105.8 s/<span
+class="math inline">1.61<em>i</em><em>n</em><em>T</em><em>y</em><em>p</em><em>e</em><em>S</em><em>c</em><em>r</em><em>i</em><em>p</em><em>t</em>, 113.3<em>s</em>/</span>1.49
+in Python, 117.1 s/<span
+class="math inline">1.86<em>i</em><em>n</em><em>G</em><em>o</em>, <em>a</em><em>n</em><em>d</em>138.5<em>s</em>/</span>1.75
+in Rust. The agent could run the tests while working. This is one
+application, one agent configuration and three repetitions. The
+correctness ceiling and small scope limit inference, while the observed
+effort directly contradicts faster Elixir development in that specific
+setup. <a href="https://github.com/banteg/minigit-bench">Experiment
+setup and shared specs</a>, <a
+href="https://github.com/banteg/minigit-bench/blob/main/results/report.md">full
+results</a>.</p>
+<p><strong>Repository issue resolution.</strong> Longtail-SWE v1
+evaluates 202 real issues across 129 repositories and 13 languages, with
+three attempts per task. Its 23 Elixir issues average 50.4% across nine
+named model configurations, among the three lowest language subsets.
+GPT-6.1 Sol high reaches 81.2% on those issues and Claude Opus 5.5 high
+reaches 75.4%. This establishes that frontier agents can solve many of
+the sampled Elixir issues and that performance depends strongly on
+configuration. Different issue sets and the absence of Python,
+TypeScript, Go, and Rust prevent a matched comparison to those
+languages. Separately, Sweat Bench v6 tracks one Elixir/Phoenix
+application through seven changing requirements, including migrations
+and regression tests. It documents payment reconstruction and reporting
+failures even when code was more modular, while some configurations
+consistently passed. Sweat Bench has no other-language control. <a
+href="https://arxiv.org/html/2611.10304v1#S4.SS4">Longtail-SWE v1, Table
+2 and §4.4</a>, <a href="https://kkondaurov.github.io/sweatbench/">Sweat
+Bench v6</a>.</p>
+<h2 id="9-real-world-implications">9. Real-world implications</h2>
+<p>Elixir gives models compact ways to express common transformations.
+Immutable data limits mutation and aliasing across stages. Pattern
+matching and guards make data shape and cases explicit. The pipe
+operator and consistent collection operations such as
+<code>Enum.map/2</code>, <code>Enum.filter/2</code> and
+<code>Enum.reduce/3</code> can express processing steps in their
+execution order. Mix, formatting conventions, compiler diagnostics,
+ExUnit, and documentation with doctests can provide useful guidance to
+an agent with tool access. These are plausible mechanisms, and José
+Valim's account describes their rationale. The V2 benchmark does not
+hold the task fixed or experimentally vary any of them. <a
+href="https://elixir-lang.org/">Elixir documentation</a>, <a
+href="https://hexdocs.pm/elixir/pattern-matching.html">pattern
+matching</a>, <a href="https://hexdocs.pm/elixir/Enum.html">collection
+APIs</a>, <a
+href="https://hexdocs.pm/elixir/writing-documentation.html">documentation
+and doctests</a>, <a
+href="https://dashbit.co/blog/why-elixir-best-language-for-ai">Valim's
+explanation</a>.</p>
+<p>Python has comprehensions, generators, <code>itertools</code> and
+<code>functools</code>. TypeScript can give an agent narrowing and
+exhaustiveness feedback with discriminated unions. Rust provides pattern
+matching and ownership diagnostics, with a learning cost around
+borrowing and lifetimes. Go offers standard formatting and conventional
+explicit errors. Strong static feedback can help iterative repair even
+if it raises the bar for a passing first answer. The relative value
+depends on the project, checked rules, and agent access to build and
+test tools. <a
+href="https://docs.python.org/3/howto/functional.html">Python functional
+programming guide</a>, <a
+href="https://www.typescriptlang.org/docs/handbook/2/narrowing.html">TypeScript
+narrowing</a>, <a
+href="https://doc.rust-lang.org/book/ch04-00-understanding-ownership.html">Rust
+ownership</a>, <a href="https://go.dev/doc/effective_go">Effective
+Go</a>.</p>
+<p>Unfamiliar syntax and idioms, less public training material, and
+narrower domain-specific libraries are plausible disadvantages. Actual
+frontier training mixtures are undisclosed in the cited experiments.
+Tokenizer and documentation interventions show that familiarity and
+access to context can matter without identifying an independent
+training-volume or language-design effect. Elixir's macros and framework
+DSLs, Phoenix and Ecto conventions, and OTP message ordering and
+supervision add reasoning demands that a pure transformation rarely
+exercises. A GenServer provides standard callbacks and supervision
+integration, and correct timeouts, lifecycle, state recovery and races
+still depend on the implementation. <a
+href="https://aclanthology.org/2025.acl-srw.57/">ACL tokenizer
+study</a>, <a
+href="https://openreview.net/pdf?id=2ctRK8h3AZ">documentation-tool
+study</a>, <a href="https://hexdocs.pm/elixir/Macro.html">Elixir
+macros</a>, <a
+href="https://hexdocs.pm/elixir/GenServer.html">GenServer</a>, <a
+href="https://hexdocs.pm/ecto/Ecto.html">Ecto</a>.</p>
+<p>V2 supplies no empirical reason to switch an existing Python,
+TypeScript, Go, or Rust project to Elixir for agent productivity. For a
+greenfield system where Elixir already fits the workload and team,
+independent experiments show that some frontier agents can do
+substantial Elixir work. A productivity claim would require comparing
+time to accepted changes, regression rates, review and repair time, and
+operating cost across equivalent work including repository navigation,
+dependency changes, debugging, multi-file refactors, and maintenance. A
+one-shot function pass rate measures only part of that work. <a
+href="https://arxiv.org/html/2611.10304v1#S3">Longtail-SWE task
+design</a>, <a href="https://kkondaurov.github.io/sweatbench/">Sweat
+Bench v6 methodology and results</a>.</p>
+<h2 id="10-final-verdict-table">10. Final verdict table</h2>
+<div class="table-scroll" role="region" aria-label="Report table" tabindex="0"><table>
+<thead>
+<tr>
+<th>Hypothesis</th>
+<th>Evidence for</th>
+<th>Evidence against or limiting inference</th>
+<th>Verdict</th>
+<th>Confidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Elixir tasks are easier</td>
+<td>Shorter statements, direct versions of multiple matched-topic
+concepts, and fewer essential steps than several focal examples.</td>
+<td>Genuine Elixir challenges and reverse examples exist. Topic and
+scope differ, and the sample has no blinded human difficulty score.</td>
+<td>The sets differ materially. Several comparisons favor Elixir on task
+scope. Average intrinsic difficulty is unresolved.</td>
+<td>High for imbalance. Moderate for the direction in audited
+comparisons.</td>
+</tr>
+<tr>
+<td>Difficulty filtering favors Elixir</td>
+<td>The original pipeline translated Elixir candidates and explicitly
+notes the potential of a language-dependent filter.</td>
+<td>Public V2 documentation discloses no candidate-level rejection and
+refinement history or cross-language filter replay.</td>
+<td>A credible inherited mechanism. The V2 magnitude and even the net
+direction remain unmeasured.</td>
+<td>High for the original mechanism. Low for any V2 effect
+estimate.</td>
+</tr>
+<tr>
+<td>The evaluator favors Elixir</td>
+<td>Some Elixir suites report mismatches without failing and the client
+supplies the expected outer module name.</td>
+<td>Many Elixir suites enforce assertions. Comparator languages have
+their own harness and coverage issues. Official model-level effects
+require the original runs.</td>
+<td>Verified task-level weaknesses. Net relative inflation remains
+unquantified.</td>
+<td>High for the specific defects. Low for their impact on the official
+ranking.</td>
+</tr>
+<tr>
+<td>Elixir improves LLM code correctness</td>
+<td>Language features plausibly ease some transformations and help
+recover from localized errors.</td>
+<td>Independent same-task studies show that several models do worse in
+Elixir. V2 tasks and graders differ across languages.</td>
+<td>A universal advantage is unsupported. A task- and model-specific
+advantage remains possible.</td>
+<td>High that V2 cannot identify the effect.</td>
+</tr>
+<tr>
+<td>Elixir is best for AI-assisted development</td>
+<td>Elixir may suit teams that benefit from BEAM and can validate
+changes efficiently.</td>
+<td>A one-shot task benchmark does not measure repository exploration,
+real dependencies, debugging, multi-file edits, or time to
+acceptance.</td>
+<td>No general recommendation follows.</td>
+<td>High.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Claim A, higher reported V2 Elixir scores.</strong>
+Unverified from the public V2 aggregates. A strong original Full result
+is separately documented.</p>
+<p><strong>Claim B, better correctness on equivalent problems.</strong>
+V2 cannot answer it. Independent matched studies show the advantage is
+not general.</p>
+<p><strong>Claim C, higher real-world productivity.</strong>
+Unestablished. The choice depends on the project, ecosystem, team, and
+toolchain.</p>
+<h3 id="reproduce-the-descriptive-audit">Reproduce the descriptive
+audit</h3>
+<p>From the workspace root with Python 3.10 or later, run the following.
+The script verifies hashes before assigning row IDs. The optional
+December input comes from the official release link in §2. The supplied
+workspace files are the February and Full inputs. The output includes
+exact release differences, per-language label counts, medians and
+quartiles, the deterministic sample, case identifiers, and the exact
+Full parent of each V2 task.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">rtk</span> proxy python3.12 autocodebench-v2-audit/analyze.py <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  autocodebench-v2-260217.jsonl <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--full</span> autocodebench.jsonl <span class="dt">\</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--december</span> /path/to/autocodebench-v2.jsonl</span></code></pre></div>
+<p>The grading probe extracts the official code-block parser from the
+pinned client. By default it runs the targeted cases in offline macOS
+processes. <code>--all-elixir</code> adds the full Elixir fixture sweep,
+<code>--original</code> adds the December comparison, and
+<code>--only 156 159 169 190</code> limits execution to four Elixir
+tasks. Use <code>--url</code> to send the selected fixtures to a local
+V2 sandbox's <code>/submit</code> endpoint. <a
+href="https://github.com/Tencent-Hunyuan/AutoCodeBenchmark/blob/e611ddd60b3cb03a5961ccd41691863f4ed5e493/AutoCodeBench-V2/call_sandbox.py">Pinned
+evaluation client</a></p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">rtk</span> proxy python3.12 autocodebench-v2-audit/grading_probe.py <span class="dt">\</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  autocodebench-v2-260217.jsonl /path/to/AutoCodeBench-V2/call_sandbox.py <span class="dt">\</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--all-elixir</span> <span class="at">--original</span> /path/to/autocodebench-v2.jsonl</span></code></pre></div>
+</body>
+</html>
